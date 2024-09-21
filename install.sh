@@ -9,14 +9,16 @@ fi
 export OP_SERVICE_ACCOUNT_TOKEN
 OP_SERVICE_ACCOUNT_TOKEN=$(cat ~/.config/op/token)
 
+# passwordless sudo
+echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$USER
+
 # install homebrew
 if ! brew >/dev/null 2>&1 ; then
   NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 # install 1password
-brew install --cask \
-  1password/tap/1password-cli
+brew install --cask 1password-cli
 
 mkdir -p ~/.ssh
 op read -f -o ~/.ssh/github "op://Service Account/github/private key"
@@ -25,9 +27,5 @@ echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH
 
 export GIT_SSH_COMMAND='ssh -i ~/.ssh/github -o UserKnownHostsFile=~/.ssh/known_hosts_tmp'
 
-if ! chezmoi >/dev/null 2>&1; then
-  sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply --ssh jonnylangefeld
-else
-  chezmoi init --ssh jonnylangefeld
-  chezmoi update --force
-fi
+mkdir -p ~/repos
+git clone git@github.com:jonnylangefeld/dotfiles.git ~/repos/dotfiles
