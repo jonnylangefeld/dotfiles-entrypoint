@@ -13,8 +13,10 @@ fi
 
 echo "running nix-shell"
 
+sudo chmod 755 /nix/var/nix/profiles/per-user
+
 # shellcheck disable=SC2016
-sudo -u "$(whoami)" nix-shell -p google-cloud-sdk git --run '
+nix-shell -p google-cloud-sdk git --run '
   current_user=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
   if [ "$current_user" != "jonny.langefeld@gmail.com" ]; then
     gcloud auth login --no-launch-browser
