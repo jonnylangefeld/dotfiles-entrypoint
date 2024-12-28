@@ -4,17 +4,17 @@
 echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/"$USER"
 
 if ! command -v nix &> /dev/null; then
-  curl -L https://nixos.org/nix/install | sh -s -- --yes
+  curl -L https://nixos.org/nix/install | sh -s -- --yes --no-daemon
   # sh -c "$(curl -fsSL https://nixos.org/nix/install)" --yes
   # /bin/bash <(curl -L https://nixos.org/nix/install) --yes
   # echo "Nix installed; starting daemon"
-  # . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
 echo "running nix-shell"
 
 # shellcheck disable=SC2016
-(nix-shell -p google-cloud-sdk git --run '
+nix-shell -p google-cloud-sdk git --run '
   current_user=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
   if [ "$current_user" != "jonny.langefeld@gmail.com" ]; then
     gcloud auth login --no-launch-browser
@@ -30,4 +30,4 @@ echo "running nix-shell"
     git clone --depth 1 "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles
     cd ~/repos/dotfiles || exit
   fi
-')
+'
