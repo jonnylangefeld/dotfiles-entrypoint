@@ -30,8 +30,8 @@ gh_token=$(gcloud secrets versions access latest --secret="gh_token" --project j
 # clone dotfiles
 mkdir -p ~/repos
 if [ -d ~/repos/dotfiles ]; then
-  cd ~/repos/dotfiles
+  cd ~/repos/dotfiles || exit
   git pull
 else
-  git clone --depth 1 "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles && cd ~/repos/dotfiles
+  git clone --depth 1 "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles; cd ~/repos/dotfiles || exit
 fi
