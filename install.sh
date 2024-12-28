@@ -7,14 +7,14 @@ if ! command -v nix &> /dev/null; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
   # sh -c "$(curl -fsSL https://nixos.org/nix/install)" --yes
   # /bin/bash <(curl -L https://nixos.org/nix/install) --yes
-  echo "Nix installed; starting daemon"
-  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  # echo "Nix installed; starting daemon"
+  # . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
 echo "running nix-shell"
 
 # shellcheck disable=SC2016
-sudo nix-shell -p google-cloud-sdk git --run '
+(nix-shell -p google-cloud-sdk git --run '
   current_user=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
   if [ "$current_user" != "jonny.langefeld@gmail.com" ]; then
     gcloud auth login --no-launch-browser
@@ -30,4 +30,4 @@ sudo nix-shell -p google-cloud-sdk git --run '
     git clone --depth 1 "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles
     cd ~/repos/dotfiles || exit
   fi
-'
+')
