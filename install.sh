@@ -4,11 +4,11 @@
 echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/"$USER"
 
 if ! command -v nix &> /dev/null; then
-  curl -L https://nixos.org/nix/install | sh -s -- --yes --daemon
+  curl -L https://nixos.org/nix/install | sh -s -- --yes
   # sh -c "$(curl -fsSL https://nixos.org/nix/install)" --yes
   # /bin/bash <(curl -L https://nixos.org/nix/install) --yes
   echo "Nix installed; starting daemon"
-  sudo . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
 # shellcheck disable=SC2016
