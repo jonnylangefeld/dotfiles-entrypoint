@@ -8,12 +8,13 @@ if ! command -v nix &> /dev/null; then
   # sh -c "$(curl -fsSL https://nixos.org/nix/install)" --yes
   # /bin/bash <(curl -L https://nixos.org/nix/install) --yes
   # echo "Nix installed; starting daemon"
-  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  # . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
 echo "running nix-shell"
 
-sudo chmod 755 /nix/var/nix/profiles/per-user
+# because otherwise I'd run into https://github.com/NixOS/docker/issues/34
+$SHELL
 
 # shellcheck disable=SC2016
 nix-shell -p google-cloud-sdk git --run '
