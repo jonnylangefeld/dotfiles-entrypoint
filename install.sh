@@ -1,12 +1,13 @@
 #!/bin/sh
 
 # passwordless sudo
-# echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/"$USER"
+echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/"$USER"
 
 if ! command -v nix &> /dev/null; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
   # sh -c "$(curl -fsSL https://nixos.org/nix/install)" --yes
   # /bin/bash <(curl -L https://nixos.org/nix/install) --yes
+  echo foo
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
