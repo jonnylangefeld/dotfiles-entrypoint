@@ -11,6 +11,8 @@ if ! command -v nix &> /dev/null; then
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
+echo "running nix-shell"
+
 # shellcheck disable=SC2016
 nix-shell -p google-cloud-sdk git --run '
   current_user=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
