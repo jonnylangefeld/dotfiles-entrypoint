@@ -45,5 +45,10 @@ gh_token=$(gcloud secrets versions access latest --secret="gh_token" --project j
 # PRIVATE_KEY=$(op read -f "op://Service Account/github/private key")
 
 mkdir -p ~/repos
-git clone "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles
+if [ -d "~/repos/dotfiles" ]; then
+  cd ~/repos/dotfiles
+  git pull
+else
+  git clone "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles
+fi
 cd ~/repos/dotfiles || exit
