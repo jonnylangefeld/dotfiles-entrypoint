@@ -4,7 +4,7 @@
 # echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/"$USER"
 
 if ! command -v nix &> /dev/null; then
-  sh <(curl -L https://nixos.org/nix/install) --yes
+  /bin/bash <(curl -L https://nixos.org/nix/install) --yes
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
