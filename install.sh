@@ -4,7 +4,7 @@
 echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/"$USER"
 
 if ! command -v nix &> /dev/null; then
-  curl -L https://nixos.org/nix/install | sh -s -- --yes --no-daemon
+  curl -L https://nixos.org/nix/install | sh -s -- --yes
   # sh -c "$(curl -fsSL https://nixos.org/nix/install)" --yes
   # /bin/bash <(curl -L https://nixos.org/nix/install) --yes
   # echo "Nix installed; starting daemon"
@@ -14,7 +14,7 @@ fi
 echo "running nix-shell"
 
 # shellcheck disable=SC2016
-nix-shell -p google-cloud-sdk git --run '
+sudo -u "$(whoami)" nix-shell -p google-cloud-sdk git --run '
   current_user=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
   if [ "$current_user" != "jonny.langefeld@gmail.com" ]; then
     gcloud auth login --no-launch-browser
