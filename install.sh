@@ -49,6 +49,5 @@ if [ -d ~/repos/dotfiles ]; then
   cd ~/repos/dotfiles
   git pull
 else
-  git clone "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles
-  cd ~/repos/dotfiles
+  git clone "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles && cd ~/repos/dotfiles
 fi
