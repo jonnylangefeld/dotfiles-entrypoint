@@ -14,7 +14,7 @@ install_developer_tools() {
     echo "Installing $label"
     softwareupdate --agree-to-license --verbose -i "$label"
     rm -rf $tmp_file
-    xcode-select --switch /Library/Developer/CommandLineTools
+    sudo xcode-select --switch /Library/Developer/CommandLineTools
   fi
 }
 install_developer_tools
@@ -27,7 +27,7 @@ fi
 echo "running nix-shell"
 
 # because otherwise I'd run into https://github.com/NixOS/docker/issues/34
-# sudo chown -R ${USER}:$(id -gn) /nix
+sudo chown -R ${USER}:$(id -gn) /nix/var/nix/profiles/per-user
 
 # shellcheck disable=SC2016
 nix-shell -p google-cloud-sdk git --run '
