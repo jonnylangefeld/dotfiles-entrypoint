@@ -17,7 +17,7 @@ install_developer_tools() {
     sudo xcode-select --switch /Library/Developer/CommandLineTools
   fi
 }
-install_developer_tools
+# install_developer_tools
 
 if ! command -v nix >/dev/null 2>&1; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
@@ -27,7 +27,8 @@ fi
 echo "running nix-shell"
 
 # because otherwise I'd run into https://github.com/NixOS/docker/issues/34
-sudo chown -R ${USER}:$(id -gn) /nix/var/nix/profiles/per-user
+# sudo chown -R ${USER}:$(id -gn) /nix/var/nix/profiles/per-user
+# sudo chown -R ${USER}:$(id -gn) /nix/var/nix/gcroots/per-user
 
 # shellcheck disable=SC2016
 nix-shell -p google-cloud-sdk git --run '
