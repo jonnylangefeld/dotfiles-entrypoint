@@ -3,18 +3,31 @@
 # passwordless sudo
 echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/"$USER"
 
-if ! command -v nix &> /dev/null; then
+# install developer tools
+# this has to be done because otherwise we would run into this error: https://github.com/zhaofengli/nix-homebrew/issues/29
+# I found the best solution to this in this comment: https://apple.stackexchange.com/questions/107307/how-can-i-install-the-command-line-tools-completely-from-the-command-line#comment433354_329261
+install_developer_tools() {
+  if ! xcode-select -p >/dev/null 2>&1; then
+    tmp_file=/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+    touch $tmp_file
+    label=$(softwareupdate -l | grep -B 1 -E "Command Line (Developer|Tools)" | awk -F"*" '/^ ?\\*/ {print$2}' | awk -F":" '{print$2}' | sed 's/^ *//;s/ *$//' | sed '/^$/d' | tail -n1)
+    echo "Installing $label"
+    softwareupdate --agree-to-license --verbose -i "$label"
+    rm -rf $tmp_file
+    xcode-select --switch /Library/Developer/CommandLineTools
+  fi
+}
+install_developer_tools
+
+if ! command -v nix >/dev/null 2>&1; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
-  # sh -c "$(curl -fsSL https://nixos.org/nix/install)" --yes
-  # /bin/bash <(curl -L https://nixos.org/nix/install) --yes
-  # echo "Nix installed; starting daemon"
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
 echo "running nix-shell"
 
 # because otherwise I'd run into https://github.com/NixOS/docker/issues/34
-sudo chown -R ${USER}:$(id -gn) /nix
+# sudo chown -R ${USER}:$(id -gn) /nix
 
 # shellcheck disable=SC2016
 nix-shell -p google-cloud-sdk git --run '
@@ -35,6 +48,6 @@ nix-shell -p google-cloud-sdk git --run '
   fi
 '
 
-xcode-select --install
+# xcode-select --install
 
 #nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/repos/dotfiles/#vm
