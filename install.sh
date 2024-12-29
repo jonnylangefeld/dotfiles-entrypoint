@@ -14,10 +14,7 @@ fi
 echo "running nix-shell"
 
 # because otherwise I'd run into https://github.com/NixOS/docker/issues/34
-# exec $SHELL
-# sudo chown -R ${USER}:staff /nix/var/nix/profiles/per-user
-# sudo chown -R ${USER}:staff /nix/var/nix/gcroots/per-user
-sudo chown -R ${USER}:staff /nix
+sudo chown -R ${USER}:$(id -gn) /nix
 
 # shellcheck disable=SC2016
 nix-shell -p google-cloud-sdk git --run '
