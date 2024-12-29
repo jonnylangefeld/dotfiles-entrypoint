@@ -21,17 +21,17 @@ install_developer_tools() {
 
 if ! command -v nix >/dev/null 2>&1; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
-  # . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
+  # This is so that nix can be used in the current shell
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-  curl -L https://nixos.org/nix/install | sh -s -- --yes
+  # curl -L https://nixos.org/nix/install | sh -s -- --yes
 fi
 
 echo "running nix-shell"
 
 # because otherwise I'd run into https://github.com/NixOS/docker/issues/34
-# sudo chown -R ${USER}:$(id -gn) /nix/var/nix/profiles/per-user
-# sudo chown -R ${USER}:$(id -gn) /nix/var/nix/gcroots/per-user
+sudo chown -R ${USER}:$(id -gn) /nix/var/nix/profiles/per-user /nix/var/nix/gcroots/per-user
 
 # shellcheck disable=SC2016
 nix-shell -p google-cloud-sdk git --run '
@@ -51,7 +51,5 @@ nix-shell -p google-cloud-sdk git --run '
     cd ~/repos/dotfiles || exit
   fi
 '
-
-# xcode-select --install
 
 #nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/repos/dotfiles/#vm
