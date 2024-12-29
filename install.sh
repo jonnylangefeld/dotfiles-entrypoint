@@ -35,4 +35,6 @@ nix-shell -p google-cloud-sdk git --run '
   fi
 '
 
-#nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/repos/dotfiles/#common
+xcode-select --install
+
+#nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/repos/dotfiles/#vm
