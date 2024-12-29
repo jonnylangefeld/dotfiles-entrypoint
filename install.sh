@@ -22,17 +22,23 @@ install_developer_tools() {
 if ! command -v nix >/dev/null 2>&1; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
 
-  # This is so that nix can be used in the current shell
+  # After installing nix, it tells us 'Nix won't work in active shell sessions until you restart them.'
+  # To be able to run nix commands in the current shells script, we source the following
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-  # curl -L https://nixos.org/nix/install | sh -s -- --yes
+  # The above perfectly works when doing all steps manual, but once running in this script, there are further issues.
+  # As soon as we get to the `nix-shell` command, we get errors like https://github.com/NixOS/docker/issues/34
+  # `error: could not set permissions on '/nix/var/nix/profiles/per-user' to 755: Operation not permitted`
+  # This is even those the permissions of that file are already 755. I noticed it has to do with ownership.
+  # I temporarily solved it by owning this file via
+  # sudo chown -R ${USER}:$(id -gn) /nix/var/nix/profiles/per-user
+  # But that just started a game of whack-a-mole, where I had to do this for more and more files.
+  # Eventually I found that if we just re-attempt the installation of nix, it will fix all the permissions, despite the re-installation failing.
+  # This seems like a hack, but currently the only solution I could find to use nix right after an install, without additional manual steps.
+  curl -L https://nixos.org/nix/install | sh -s -- --yes
 fi
 
 echo "running nix-shell"
-
-# because otherwise I'd run into https://github.com/NixOS/docker/issues/34
-sudo chown -R ${USER}:$(id -gn) /nix/var/nix/profiles/per-user /nix/var/nix/gcroots/per-user
-
 # shellcheck disable=SC2016
 nix-shell -p google-cloud-sdk git --run '
   current_user=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
