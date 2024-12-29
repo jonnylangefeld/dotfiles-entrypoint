@@ -30,7 +30,9 @@ nix-shell -p google-cloud-sdk git --run '
     cd ~/repos/dotfiles || exit
     git pull
   else
-    git clone --depth 1 "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles
+    git clone --depth 1 --branch jlf/universal "https://$gh_token@github.com/jonnylangefeld/dotfiles.git" ~/repos/dotfiles
     cd ~/repos/dotfiles || exit
   fi
 '
+
+#nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/repos/dotfiles/#common
