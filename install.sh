@@ -8,16 +8,17 @@ if ! command -v nix &> /dev/null; then
   # sh -c "$(curl -fsSL https://nixos.org/nix/install)" --yes
   # /bin/bash <(curl -L https://nixos.org/nix/install) --yes
   # echo "Nix installed; starting daemon"
-  # . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
 echo "running nix-shell"
 
 # because otherwise I'd run into https://github.com/NixOS/docker/issues/34
 # exec $SHELL
+sudo chown -R ${USER}:staff /nix/var/nix/profiles/per-user
 
 # shellcheck disable=SC2016
-/nix/var/nix/profiles/default/bin/nix-shell -p google-cloud-sdk git --run '
+nix-shell -p google-cloud-sdk git --run '
   current_user=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
   if [ "$current_user" != "jonny.langefeld@gmail.com" ]; then
     gcloud auth login --no-launch-browser
