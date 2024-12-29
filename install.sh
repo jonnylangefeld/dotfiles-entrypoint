@@ -22,6 +22,9 @@ install_developer_tools() {
 if ! command -v nix >/dev/null 2>&1; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+
+  curl -L https://nixos.org/nix/install | sh -s -- --yes
 fi
 
 echo "running nix-shell"
