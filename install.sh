@@ -17,7 +17,7 @@ install_developer_tools() {
     sudo xcode-select --switch /Library/Developer/CommandLineTools
   fi
 }
-# install_developer_tools
+install_developer_tools
 
 if ! command -v nix >/dev/null 2>&1; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
@@ -35,6 +35,7 @@ if ! command -v nix >/dev/null 2>&1; then
   # But that just started a game of whack-a-mole, where I had to do this for more and more files.
   # Eventually I found that if we just re-attempt the installation of nix, it will fix all the permissions, despite the re-installation failing.
   # This seems like a hack, but currently the only solution I could find to use nix right after an install, without additional manual steps.
+  # Since this is only executed on a brand new install, I'll accept this hack for now.
   curl -L https://nixos.org/nix/install | sh -s -- --yes
 fi
 
