@@ -41,6 +41,7 @@ if ! command -v nix >/dev/null 2>&1; then
   # curl -L https://nixos.org/nix/install | sh -s -- --yes
 
   nc -zU /var/run/nix-daemon.sock
+  echo $?
   # sudo usermod -aG nixbld "$(whoami)"
   # sudo dseditgroup -o edit -a "$(whoami)" -t user nixbld
   # if [ "$(uname -s)" = "Darwin" ]; then
