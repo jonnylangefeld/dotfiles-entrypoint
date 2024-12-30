@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 # passwordless sudo
 echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/"$USER"
 
@@ -39,7 +41,12 @@ if ! command -v nix >/dev/null 2>&1; then
   # curl -L https://nixos.org/nix/install | sh -s -- --yes
 
   # sudo usermod -aG nixbld "$(whoami)"
-  sudo dseditgroup -o edit -a "$(whoami)" -t user nixbld
+  # sudo dseditgroup -o edit -a "$(whoami)" -t user nixbld
+  if [ "$(uname -s)" = "Darwin" ]; then
+    sudo dseditgroup -o edit -a "$(whoami)" -t user nixbld
+  else
+    sudo usermod -aG nixbld "$(whoami)"
+  fi
 fi
 
 echo "running nix-shell"
