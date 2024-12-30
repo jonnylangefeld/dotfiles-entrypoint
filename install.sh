@@ -40,8 +40,16 @@ if ! command -v nix >/dev/null 2>&1; then
   # Since this is only executed on a brand new install, I'll accept this hack for now.
   # curl -L https://nixos.org/nix/install | sh -s -- --yes
 
-  nc -zU /var/run/nix-daemon.sock
-  echo $?
+  timeout=30
+  while ! nc -zU /var/run/nix-daemon.sock; do
+    echo "Waiting for nix-daemon to start..."
+    sleep 1
+    timeout=$((timeout - 1))
+    if [ $timeout -le 0 ]; then
+      echo "Nix daemon didn't start, exiting."
+      exit 1
+    fi
+  done
   # sudo usermod -aG nixbld "$(whoami)"
   # sudo dseditgroup -o edit -a "$(whoami)" -t user nixbld
   # if [ "$(uname -s)" = "Darwin" ]; then
