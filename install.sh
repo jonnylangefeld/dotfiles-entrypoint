@@ -38,18 +38,18 @@ if ! command -v nix >/dev/null 2>&1; then
   # Eventually I found that if we just re-attempt the installation of nix, it will fix all the permissions, despite the re-installation failing.
   # This seems like a hack, but currently the only solution I could find to use nix right after an install, without additional manual steps.
   # Since this is only executed on a brand new install, I'll accept this hack for now.
-  # curl -L https://nixos.org/nix/install | sh -s -- --yes
+  curl -L https://nixos.org/nix/install | sh -s -- --yes
 
-  timeout=30
-  while ! nc -zU /var/run/nix-daemon.sock; do
-    echo "Waiting for nix-daemon to start..."
-    sleep 1
-    timeout=$((timeout - 1))
-    if [ $timeout -le 0 ]; then
-      echo "Nix daemon didn't start, exiting."
-      exit 1
-    fi
-  done
+  # timeout=30
+  # while ! nc -zU /var/run/nix-daemon.sock; do
+  #   echo "Waiting for nix-daemon to start..."
+  #   sleep 1
+  #   timeout=$((timeout - 1))
+  #   if [ $timeout -le 0 ]; then
+  #     echo "Nix daemon didn't start, exiting."
+  #     exit 1
+  #   fi
+  # done
   # sudo usermod -aG nixbld "$(whoami)"
   # sudo dseditgroup -o edit -a "$(whoami)" -t user nixbld
   # if [ "$(uname -s)" = "Darwin" ]; then
