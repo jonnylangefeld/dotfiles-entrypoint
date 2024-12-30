@@ -17,7 +17,7 @@ install_developer_tools() {
     sudo xcode-select --switch /Library/Developer/CommandLineTools
   fi
 }
-install_developer_tools
+# install_developer_tools
 
 if ! command -v nix >/dev/null 2>&1; then
   curl -L https://nixos.org/nix/install | sh -s -- --yes
@@ -38,7 +38,8 @@ if ! command -v nix >/dev/null 2>&1; then
   # Since this is only executed on a brand new install, I'll accept this hack for now.
   # curl -L https://nixos.org/nix/install | sh -s -- --yes
 
-  sudo usermod -aG nixbld "$(whoami)"
+  # sudo usermod -aG nixbld "$(whoami)"
+  sudo dseditgroup -o edit -a "$(whoami)" -t user nixbld
 fi
 
 echo "running nix-shell"
